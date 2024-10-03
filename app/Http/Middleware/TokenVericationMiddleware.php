@@ -16,19 +16,16 @@ class TokenVericationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        $token=$request->header('token');
-        $result=JWTToken::VerifyToken($token);
-
-        if($result=='unauthorized'){
-            return response()->json(['message'=>'unauthorized'],401);
+        $token=$request->cookie('token');
+        $decode=JWTToken::VerifyToken($token);
+        if($decode=='unauthorized'){
+            return redirect('/userLogin');
         }else{
-
-// Example of setting a value for internal use
-$request->headers->set('email', $result);
+            $request->headers->set('email', $decode);
             return $next($request);
-            
-
         }
+       
     }
 }
+
+
