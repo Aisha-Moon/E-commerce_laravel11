@@ -4,9 +4,11 @@ namespace App\Http\Controllers\pos;
 
 use Exception; 
 use App\Models\User;
+use App\Mail\OTPMail;
 use App\Helper\JWTToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Validator;
 
@@ -73,5 +75,45 @@ class UserController extends BaseController
         return $this->sendError('An error occurred', $e->getMessage(), 500); 
 
       }
+    }
+
+    public function sendOtpCode(Request $request){
+        $email=$request->input('email');
+        $otp=rand(1000,9999);
+        $user=User::where('email',$email)->count();
+        if($user){
+            Mail::to($email)->send(new OTPMail($otp));
+            User::where('email',$email)->update(['otp'=>$otp]);
+            return $this->sendResponse($email, 'OTP sent successfully');
+        }else{
+            return $this->sendError('failed','User not found');
+        }
+    }
+
+    public function verifyOtpCode(Request $request){
+        $email=$request->input('email');
+        $otp=$request->input('otp');
+
+        $user=User::where('email',$email)->where('otp',$otp)->count();
+        if($user){
+            User::where('email',$email)->update(['otp'=>0]);
+            $token=JWTToken::generateTokenForReset($email);
+            return $this->sendResponse($token, 'OTP verified successfully');
+        }else{
+            return $this->sendError('failed','Invalid OTP');
+        }
+
+    }
+
+    public function ResetPass(Request $request){
+        try{
+            $email=$request->header('email');
+            $password=$request->input('password');
+            User::where('email',$email)->update(['password'=>$password]);
+            return $this->sendResponse($email, 'Password reset successfully');
+    
+        }catch(Exception $e){
+            return $this->sendError('An error occurred', $e->getMessage(), 500);
+        }
     }
 }
