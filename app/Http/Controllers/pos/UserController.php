@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\pos;
 
+use Exception; 
 use App\Models\User;
+use App\Helper\JWTToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Exception; 
 use App\Http\Controllers\BaseController;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
 {
@@ -39,5 +40,38 @@ class UserController extends BaseController
         } catch (Exception $e) { 
             return $this->sendError('An error occurred', $e->getMessage(), 500); 
          }
+    }
+
+    public function login(Request $request){
+      try {
+        $validateUser=Validator::make(
+            $request->all(),
+            [
+                'email' => 'required|email',
+                'password' => 'required'
+            ]
+              );
+            if($validateUser->fails()){
+
+                return $this->sendError('Validation error', $validateUser->errors());
+
+            }
+            $user=User::where('email',$request->input('email'))
+                      ->where('password',$request->input('password'))->count();
+
+            if($user){
+                $token = JWTToken::generateToken($request->input('email'));
+                return $this->sendResponse([
+                  
+                    'token' => $token,
+                ], 'User login successfully');
+                
+            }else{
+                return $this->sendError('failed','User not found');
+            }
+      } catch (Exception $e) {
+        return $this->sendError('An error occurred', $e->getMessage(), 500); 
+
+      }
     }
 }
