@@ -14,6 +14,28 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
 {
+
+    function LoginPage(){
+        return view('pages.auth.login-page');
+    }
+
+    function RegistrationPage(){
+        return view('pages.auth.registration-page');
+    }
+    function SendOtpPage(){
+        return view('pages.auth.send-otp-page');
+    }
+    function VerifyOTPPage(){
+        return view('pages.auth.verify-otp-page');
+    }
+
+    function ResetPasswordPage(){
+        return view('pages.auth.reset-pass-page');
+    }
+
+    function ProfilePage(){
+        return view('pages.dashboard.profile-page');
+    }
     public function signup(Request $request)
     {
         try {
