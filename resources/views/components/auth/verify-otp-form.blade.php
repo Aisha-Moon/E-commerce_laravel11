@@ -15,3 +15,44 @@
     </div>
 </div>
 
+<script>
+    async function VerifyOtp() {
+        let otp = document.getElementById('otp').value;
+        if (otp.length === 0) {
+            errorToast('OTP is required');
+            return;
+        } else if (otp.length !== 4) {
+            errorToast('Invalid OTP');
+            return;
+        }
+
+        let email = sessionStorage.getItem('email');
+        if (!email) {
+            errorToast('Email is not available. Please go back and enter your email again.');
+            return;
+        }
+
+        try {
+            showLoader();
+            let res = await axios.post("/verify-otp", {
+                'otp': otp,
+                'email': email
+            });
+            hideLoader();
+
+            if (res.status === 200 && res.data['status'] === 'success') {
+                successToast(res.data['message']);
+                sessionStorage.removeItem('email');
+                setTimeout(() => {
+                    window.location.href = "/resetPassword";
+                }, 1000);
+            } else {
+                errorToast(res.data['message']);
+            }
+        } catch (error) {
+            hideLoader();
+            errorToast('An error occurred while verifying the OTP.');
+            console.error('Error during OTP verification:', error);
+        }
+    }
+</script>
