@@ -51,6 +51,7 @@
             }
             else{
                 errorToast(res.data['message'])
+                return;
             }
         }
     }

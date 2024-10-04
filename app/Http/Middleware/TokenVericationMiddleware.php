@@ -21,7 +21,8 @@ class TokenVericationMiddleware
         if($decode=='unauthorized'){
             return redirect('/userLogin');
         }else{
-            $request->headers->set('email', $decode);
+            $request->headers->set('email', $decode->email);
+            $request->headers->set('id', $decode->id);
             return $next($request);
         }
        

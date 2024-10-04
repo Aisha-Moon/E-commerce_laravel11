@@ -70,10 +70,11 @@ class UserController extends Controller
     {
         $user = User::where('email', $request->input('email'))
             ->where('password', $request->input('password'))
-            ->first();
+            ->select('id')->first();
+            // dd($user);
 
         if ($user !== null) {
-            $token = JWTToken::CreateToken($request->input('email'));
+            $token = JWTToken::CreateToken($request->input('email'), $user->id);
             return response()->json([
                 'message' => 'User logged in successfully!',
                 'status' => 'success',
@@ -82,7 +83,7 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'Invalid email or password',
                 'status' => 'Failed'
-            ], 401);
+            ], 200);
         }
     }
 

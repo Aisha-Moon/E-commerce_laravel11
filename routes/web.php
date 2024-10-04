@@ -9,6 +9,8 @@ Route::post('/user-login', [UserController::class, 'login']);
 Route::post('/send-otp', [UserController::class, 'sendOtpCode']);
 Route::post('/verify-otp', [UserController::class, 'verifyOtpCode']);
 Route::post('/reset-password', [UserController::class, 'ResetPass'])->middleware('tokenVerify');
+Route::get('/logout',[UserController::class,'UserLogout']);
+
 
 
 Route::get('/userLogin',[UserController::class,'LoginPage']);
