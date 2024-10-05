@@ -49,14 +49,29 @@
                <td>${index+1}</td>
                <td>${item['name']}</td>
                <td>
-                   <button data-id="${item['id']}" data-name="${item['name']}" data-bs-toggle="modal" data-bs-target="#update-modal" class="btn bg-gradient-primary">Update</button>
-                   <button data-id="${item['id']}" data-bs-toggle="modal" data-bs-target="#delete-modal" class="btn bg-gradient-danger">Delete</button>
+                   <button data-id="${item['id']}" data-name="${item['name']}" data-bs-toggle="modal" data-bs-target="#update-modal" class="btn bg-gradient-primary editBtn">Update</button>
+                   <button data-id="${item['id']}" data-bs-toggle="modal" data-bs-target="#delete-modal" class="btn bg-gradient-danger deleteBtn">Delete</button>
                </td>
 
                </tr>`;
 
               tableList.append(row);
-         })
+         });
+
+         $('.editBtn').on('click',  function(){
+          let id = $(this).data('id');
+          alert(id);
+          });
+         $('.deleteBtn').on('click',  function(){
+
+                let id = $(this).data('id');
+                $('#deleteId').val(id);
+          
+
+          });
+
+
+
          new DataTable('#tableData',
           {
                order:[[0,"desc"]],
