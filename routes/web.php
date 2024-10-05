@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\pos\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\pos\CategoryController;
 
 Route::post('/user-registration', [UserController::class, 'signup']);
 Route::post('/user-login', [UserController::class, 'login']);
@@ -22,7 +23,10 @@ Route::get('/resetPassword',[UserController::class,'ResetPasswordPage'])->middle
 Route::get('/dashboard',[DashboardController::class,'DashboardPage'])->middleware('tokenVerify');
 Route::get('/user-profile',[UserController::class,'UserProfile'])->middleware('tokenVerify');
 Route::get('/userProfile',[UserController::class,'ProfilePage'])->middleware('tokenVerify');
+Route::get('categories-page', [CategoryController::class, 'page'])->name('categories.page');
 
 
 
+
+Route::resource('categories', CategoryController::class)->middleware('tokenVerify');;
 
