@@ -47,14 +47,23 @@ class CategoryController extends Controller
    
     public function update(Request $request, string $id)
     {
-        $user_id=$request->header('id');
-        $category_id=$request->input('id');
-        Category::where('user_id', $user_id)->where('id', $category_id)->update([
-            'name'=>$request->name
-        ]);
+        $user_id = $request->header('id');
+    
+        
+        $category = Category::where('user_id', $user_id)->where('id', $id)->first();
+    
+       
+        if (!$category) {
+            return response()->json(['message' => 'Category not found.'], 404);
+        }
+    
+        
+        $category->name = $request->name; 
+        $category->save();
+    
         return response()->json(['message' => 'Category updated successfully.'], 200);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
