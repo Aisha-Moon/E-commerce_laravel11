@@ -18,7 +18,7 @@
                                 <label class="form-label mt-3">Customer Mobile *</label>
                                 <input type="text" class="form-control" id="customerMobileUpdate">
 
-                                <input type="text" class="d-none" id="updateID">
+                                <input type="text" class="d-" id="updateID">
                             </div>
                         </div>
                     </div>
@@ -33,3 +33,70 @@
 </div>
 
 
+<script>
+    async function fillUpdateForm(){
+        let id= document.getElementById('updateID').value;
+      
+        
+        showLoader();
+
+        let res = await axios.request({
+            url: `customers/${id}`,  
+            method: 'GET',          
+            data: { id: id }           
+        });
+        hideLoader();
+     
+        if(res.status==200){
+               
+            document.getElementById('customerNameUpdate').value=res.data.customer.name;
+            document.getElementById('customerEmailUpdate').value=res.data.customer.email;
+            document.getElementById('customerMobileUpdate').value=res.data.customer.mobile;
+
+        }
+    
+    
+       
+    }
+    async function Update() {
+
+
+        let Cname = document.getElementById('customerNameUpdate').value;
+        let Cemail = document.getElementById('customerEmailUpdate').value;
+        let Cmobile = document.getElementById('customerMobileUpdate').value;
+
+
+        if (Cname.length == 0) {
+            errorToast('Customer Name is required');
+            return;
+        } else if (Cemail.length == 0) {
+            errorToast('Customer Email is required');
+            return;  
+        } else if (Cmobile.length == 0) {
+            errorToast('Customer Mobile is required');
+            return;  
+        } else {
+            document.getElementById('update-modal-close').click();
+            showLoader();
+            let id = document.getElementById('updateID').value;
+            let res = await axios.request({
+                url: `customers/${id}`,  
+                method: 'PUT',       
+                data: {
+                    name: Cname,
+                    email: Cemail,
+                    mobile: Cmobile
+                }
+            });
+            hideLoader();
+            if (res.status === 200) {
+                successToast(res.data['message']);
+                await getList();
+            } else {
+                errorToast('Request Failed');
+            }
+        }
+
+
+    }
+</script>

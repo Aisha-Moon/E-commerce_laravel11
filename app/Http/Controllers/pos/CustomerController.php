@@ -47,30 +47,37 @@ class CustomerController extends Controller
         return response()->json(['message' => 'Customer created successfully.', 'customer' => $customer], 201);
     }
 
-    /**
-     * Update the specified customer in storage.
-     */
+    public function show(Request $request,$id){
+        $user_id = $request->header('id');
+        
+
+        $customer = Customer::where('user_id', $user_id)->where('id', $id)->first();
+        if (!$customer) {
+            return response()->json(['message' => 'Customer not found.'], 404);
+        }
+        return response()->json(['customer' => $customer], 200);
+    }
+
+ 
     public function update(Request $request, string $id)
     
     {
+      
         $user_id = $request->header('id');
     
-        // Find the customer by ID and user_id to ensure it's owned by the current user
         $customer = Customer::where('user_id', $user_id)->where('id', $id)->first();
     
         if (!$customer) {
             return response()->json(['message' => 'Customer not found.'], 404);
         }
     
-        // Update the customer fields
+       
         $customer->update($request->only('name', 'email', 'mobile'));
     
         return response()->json(['message' => 'Customer updated successfully.', 'customer' => $customer], 200);
     }
 
-    /**
-     * Remove the specified customer from storage.
-     */
+  
     public function destroy(Request $request, string $id)
     {
         $user_id = $request->header('id');
