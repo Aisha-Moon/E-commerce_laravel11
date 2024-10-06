@@ -28,5 +28,6 @@ Route::get('categoryPage', [CategoryController::class, 'page'])->name('categorie
 Route::get('customerPage', [CustomerController::class, 'page'])->name('customers.page')->middleware('tokenVerify');
 
 
+
 Route::resource('categories', CategoryController::class)->middleware('tokenVerify');
 Route::resource('customers', CustomerController::class)->middleware('tokenVerify');

@@ -29,9 +29,16 @@ class CategoryController extends Controller
  
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function show(Request $request,$id){
+        $user_id = $request->header('id');
+        
+
+        $category = Category::where('user_id', $user_id)->where('id', $id)->first();
+        if (!$category) {
+            return response()->json(['message' => 'Category not found.'], 404);
+        }
+        return response()->json($category, 200);
+    }
     public function store(Request $request)
     {
         $user_id=$request->header('id');
