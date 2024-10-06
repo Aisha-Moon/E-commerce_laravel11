@@ -27,8 +27,8 @@
                url: `categories/${id}`,  // The URL for the delete request
                method: 'DELETE',          // HTTP method
                data: { id: id }           // Data to be sent in the request
-});
-console.log(res);
+          });
+
 
 
 

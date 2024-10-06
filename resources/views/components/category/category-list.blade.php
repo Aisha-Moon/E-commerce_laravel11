@@ -60,7 +60,7 @@
 
          $('.editBtn').on('click',  function(){
           let id = $(this).data('id');
-          alert(id);
+         
           });
          $('.deleteBtn').on('click',  function(){
 
