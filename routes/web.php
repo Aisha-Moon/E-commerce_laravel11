@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\pos\CustomerController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\pos\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\pos\CategoryController;
+use App\Http\Controllers\pos\CustomerController;
 
 Route::post('/user-registration', [UserController::class, 'signup']);
 Route::post('/user-login', [UserController::class, 'login']);
@@ -26,8 +27,11 @@ Route::get('/user-profile',[UserController::class,'UserProfile'])->middleware('t
 Route::get('/userProfile',[UserController::class,'ProfilePage'])->middleware('tokenVerify');
 Route::get('categoryPage', [CategoryController::class, 'page'])->name('categories.page')->middleware('tokenVerify');
 Route::get('customerPage', [CustomerController::class, 'page'])->name('customers.page')->middleware('tokenVerify');
+Route::get('productPage', [ProductController::class, 'page'])->name('products.page')->middleware('tokenVerify');
 
 
 
 Route::resource('categories', CategoryController::class)->middleware('tokenVerify');
 Route::resource('customers', CustomerController::class)->middleware('tokenVerify');
+Route::resource('products', ProductController::class)->middleware('tokenVerify');
+
