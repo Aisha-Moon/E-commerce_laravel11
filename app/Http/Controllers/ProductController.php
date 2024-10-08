@@ -88,7 +88,7 @@ class ProductController extends Controller
     
         $user_id = $request->header('id');
         $product = Product::where('user_id', $user_id)->where('id', $id)->first();
-    
+ 
         if (!$product) {
             return response()->json(['message' => 'Product not found.'], 404);
         }

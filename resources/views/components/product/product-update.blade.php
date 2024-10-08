@@ -1,4 +1,4 @@
-<div class="modal animated zoomIn" id="update-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal animated zoomIn" id="update-modal" aria-labelledby="exampleModalLabel" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,29 +10,27 @@
                         <div class="row">
                             <div class="col-12 p-1">
 
-
                                 <label class="form-label">Category</label>
-                                <select type="text" class="form-control form-select" id="productCategoryUpdate">
+                                <select class="form-control form-select" id="productCategoryUpdate" type="text">
                                     <option value="">Select Category</option>
                                 </select>
 
                                 <label class="form-label mt-2">Name</label>
-                                <input type="text" class="form-control" id="productNameUpdate">
+                                <input class="form-control" id="productNameUpdate" type="text">
 
                                 <label class="form-label mt-2">Price</label>
-                                <input type="text" class="form-control" id="productPriceUpdate">
+                                <input class="form-control" id="productPriceUpdate" type="text">
 
                                 <label class="form-label mt-2">Unit</label>
-                                <input type="text" class="form-control" id="productUnitUpdate">
-                                <br/>
-                                <img class="w-15" id="oldImg" src="{{asset('images/default.jpg')}}"/>
-                                <br/>
+                                <input class="form-control" id="productUnitUpdate" type="text">
+                                <br />
+                                <img class="w-15" id="oldImg" src="{{ asset('images/default.jpg') }}" />
+                                <br />
                                 <label class="form-label mt-2">Image</label>
-                                <input oninput="oldImg.src=window.URL.createObjectURL(this.files[0])"  type="file" class="form-control" id="productImgUpdate">
+                                <input class="form-control" id="productImgUpdate" type="file" oninput="oldImg.src=window.URL.createObjectURL(this.files[0])">
 
-                                <input type="text" class="d-none" id="updateID">
-                                <input type="text" class="d-none" id="filePath">
-
+                                <input class="d-none" id="updateID" type="text">
+                                <input class="d-none" id="filePath" type="text">
 
                             </div>
                         </div>
@@ -41,105 +39,105 @@
             </div>
 
             <div class="modal-footer">
-                <button id="update-modal-close" class="btn bg-gradient-primary" data-bs-dismiss="modal" aria-label="Close">Close</button>
-                <button onclick="update()" id="update-btn" class="btn bg-gradient-success" >Update</button>
+                <button class="btn bg-gradient-primary" id="update-modal-close" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button class="btn bg-gradient-success" id="update-btn" onclick="update()">Update</button>
             </div>
 
         </div>
     </div>
 </div>
-
-
 <script>
-
-
-
-    async function UpdateFillCategoryDropDown(){
-        let res = await axios.get("categories")
-        res.data.forEach(function (item,i) {
-            let option=`<option value="${item['id']}">${item['name']}</option>`
+    FillUpCategory();
+    async function FillUpCategory() {
+        let res = await axios.get("/categories")
+        res.data.forEach(function(item, i) {
+            let option = `<option value="${item['id']}">${item['name']}</option>`
             $("#productCategoryUpdate").append(option);
         })
     }
 
-
-    async function FillUpUpdateForm(id,filePath){
-
-        document.getElementById('updateID').value=id;
-        document.getElementById('filePath').value=filePath;
-        document.getElementById('oldImg').src=filePath;
-
+    async function FillUpUpdateForm(id, path) {
+        document.getElementById('updateID').value = id;
+        document.getElementById('filePath').value = path;
+        document.getElementById('oldImg').src = path;
 
         showLoader();
-        await UpdateFillCategoryDropDown();
+        await FillUpCategory();
 
-        let res=await axios.post("/products/",{id:id})
+        let res = await axios.request({
+            url: `products/${id}`,
+            method: 'GET',
+
+        });
+
+
         hideLoader();
-
-        document.getElementById('productNameUpdate').value=res.data['name'];
-        document.getElementById('productPriceUpdate').value=res.data['price'];
-        document.getElementById('productUnitUpdate').value=res.data['unit'];
-        document.getElementById('productCategoryUpdate').value=res.data['category_id'];
-
+        if (res.status == 200) {
+            document.getElementById('productNameUpdate').value = res.data.name;
+            document.getElementById('productPriceUpdate').value = res.data.price;
+            document.getElementById('productUnitUpdate').value = res.data.unit;
+            document.getElementById('productCategoryUpdate').value = res.data.category_id;
+        }
     }
-
-
-
     async function update() {
 
-        let productCategoryUpdate=document.getElementById('productCategoryUpdate').value;
+        let productCategoryUpdate = document.getElementById('productCategoryUpdate').value;
         let productNameUpdate = document.getElementById('productNameUpdate').value;
         let productPriceUpdate = document.getElementById('productPriceUpdate').value;
         let productUnitUpdate = document.getElementById('productUnitUpdate').value;
-        let updateID=document.getElementById('updateID').value;
-        let filePath=document.getElementById('filePath').value;
+        let updateID = document.getElementById('updateID').value;
+        let filePath = document.getElementById('filePath').value;
         let productImgUpdate = document.getElementById('productImgUpdate').files[0];
 
 
         if (productCategoryUpdate.length === 0) {
-            errorToast("Product Category Required !")
-        }
-        else if(productNameUpdate.length===0){
-            errorToast("Product Name Required !")
-        }
-        else if(productPriceUpdate.length===0){
-            errorToast("Product Price Required !")
-        }
-        else if(productUnitUpdate.length===0){
-            errorToast("Product Unit Required !")
+            errorToast("Product Category Required !");
+            return;
+        } else if (productNameUpdate.length === 0) {
+            errorToast("Product Name Required !");
+            return;
+        } else if (productPriceUpdate.length === 0) {
+            errorToast("Product Price Required !");
+            return;
+        } else if (productUnitUpdate.length === 0) {
+            errorToast("Product Unit Required !");
+            return;
         }
 
-        else {
+        document.getElementById('update-modal-close').click();
 
-            document.getElementById('update-modal-close').click();
+        let formData = new FormData();
 
-            let formData=new FormData();
-            formData.append('img',productImgUpdate)
-            formData.append('id',updateID)
-            formData.append('name',productNameUpdate)
-            formData.append('price',productPriceUpdate)
-            formData.append('unit',productNameUpdate)
-            formData.append('category_id',productCategoryUpdate)
-            formData.append('file_path',filePath)
+        if (productImgUpdate) {
+            formData.append('img_url', productImgUpdate);
+        }
 
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
+        formData.append('_method', "PUT");
+        formData.append('id', updateID);
+        formData.append('name', productNameUpdate);
+        formData.append('price', productPriceUpdate);
+        formData.append('unit', productUnitUpdate);
+        formData.append('category_id', productCategoryUpdate);
+        formData.append('file_path', filePath);
+
+        showLoader();
+
+        let res = await axios.post(`/products/${updateID}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
             }
+        });
 
-            showLoader();
-            let res = await axios.post("/update-product",formData,config)
-            hideLoader();
+     
 
-            if(res.status===200 && res.data===1){
-                successToast('Request completed');
-                document.getElementById("update-form").reset();
-                await getList();
-            }
-            else{
-                errorToast("Request fail !")
-            }
+        hideLoader();
+
+        if (res.status === 200) {
+            successToast('Request completed');
+            document.getElementById("update-form").reset();
+            await getList();
+        } else {
+            errorToast("Request failed !");
         }
     }
 </script>

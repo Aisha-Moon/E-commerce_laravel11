@@ -45,3 +45,69 @@
 </div>
 
 
+<script>
+    FillUpCategory();
+    async function FillUpCategory(){
+        let res=await axios.get('/categories');
+
+        res.data.forEach((item,index)=>{
+            let option=`<option value="${item['id']}">${item['name']}</option>`;
+            // document.getElementById('productCategory').innerHTML+=option;
+            $('#productCategory').append(option);
+        })
+    }
+    async function Save(){
+    let category = document.getElementById('productCategory').value;
+    let name = document.getElementById('productName').value;
+    let price = document.getElementById('productPrice').value;
+    let unit = document.getElementById('productUnit').value;
+    let img = document.getElementById('productImg').files[0];
+
+    if (category.length === 0) {
+        errorToast('Category is required');
+        return;
+    } else if (name.length === 0) {
+        errorToast('Name is required');
+        return;
+    } else if (price.length === 0) {
+        errorToast('Price is required');
+        return;
+    } else if (unit.length === 0) {
+        errorToast('Unit is required');
+        return;
+    } else if (!img) {
+        errorToast('Image is required');
+        return;
+    } else {
+        document.getElementById('modal-close').click();
+
+        // Corrected this line
+        let formData = new FormData();
+        formData.append('category_id', category);
+        formData.append('name', name);
+        formData.append('price', price);
+        formData.append('unit', unit);
+        formData.append('img_url', img);
+        
+        let config={
+            headers:{
+                'content-type':'multipart/form-data'
+            }
+        }
+
+        showLoader();
+        let res = await axios.post('/products', formData,config);
+        hideLoader();
+
+        if (res.status === 201) {
+            successToast(res.data['message']);
+            document.getElementById('save-form').reset();
+            await getList();
+        } else {
+            errorToast(res.data['message']);
+        }
+    }
+}
+
+    
+</script>
