@@ -77,8 +77,9 @@ class CategoryController extends Controller
     public function destroy(Request $request,string $id)
     {
         $user_id=$request->header('id');
-        $category_id=$request->input('id');
-        Category::where('user_id', $user_id)->where('id', $category_id)->delete();
+       
+        $category=Category::where('user_id', $user_id)->where('id', $id)->first();
+        $category->delete();
         return response()->json(['message' => 'Category deleted successfully.'], 200);
     }
 }
