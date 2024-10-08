@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\pos\UserController;
 use App\Http\Controllers\DashboardController;
@@ -28,6 +29,9 @@ Route::get('/userProfile',[UserController::class,'ProfilePage'])->middleware('to
 Route::get('categoryPage', [CategoryController::class, 'page'])->name('categories.page')->middleware('tokenVerify');
 Route::get('customerPage', [CustomerController::class, 'page'])->name('customers.page')->middleware('tokenVerify');
 Route::get('productPage', [ProductController::class, 'page'])->name('products.page')->middleware('tokenVerify');
+Route::get('/invoicePage',[InvoiceController::class,'InvoicePage'])->middleware('tokenVerify');
+Route::get('/salePage',[InvoiceController::class,'SalePage'])->middleware('tokenVerify');
+
 
 
 
@@ -35,3 +39,8 @@ Route::resource('categories', CategoryController::class)->middleware('tokenVerif
 Route::resource('customers', CustomerController::class)->middleware('tokenVerify');
 Route::resource('products', ProductController::class)->middleware('tokenVerify');
 
+// Invoice
+Route::post("/invoice-create",[InvoiceController::class,'invoiceCreate'])->middleware('tokenVerify');
+Route::get("/invoice-select",[InvoiceController::class,'invoiceSelect'])->middleware('tokenVerify');
+Route::post("/invoice-details",[InvoiceController::class,'InvoiceDetails'])->middleware('tokenVerify');
+Route::post("/invoice-delete",[InvoiceController::class,'invoiceDelete'])->middleware('tokenVerify');
