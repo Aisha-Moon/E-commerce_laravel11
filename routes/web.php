@@ -44,3 +44,6 @@ Route::post("/invoice-create",[InvoiceController::class,'invoiceCreate'])->middl
 Route::get("/invoice-select",[InvoiceController::class,'invoiceSelect'])->middleware('tokenVerify');
 Route::post("/invoice-details",[InvoiceController::class,'InvoiceDetails'])->middleware('tokenVerify');
 Route::post("/invoice-delete",[InvoiceController::class,'invoiceDelete'])->middleware('tokenVerify');
+
+
+Route::get("/summary",[DashboardController::class,'Summary'])->middleware('tokenVerify');
