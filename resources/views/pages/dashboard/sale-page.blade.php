@@ -268,50 +268,6 @@
                 lengthChange: false
             });
         }
-        async function ProductList() {
-            let res = await axios.get("/products");
-            let productList = $("#productList");
-            let productTable = $("#productTable");
-            productTable.DataTable().destroy();
-            productList.empty();
-
-            console.log(res);
-
-
-            res.data.forEach(function(item, index) {
-                let row =` <tr>
-                             <td>
-                                <img class="w-10" src="${item['img_url']}" alt="${item['name']}"/> ${item['name']} - $${item['price']}
-                             </td>
-                             <td>
-                                <a data-name="${item['name']}" data-price="${item['price']}" data-id="${item['id']}" class="btn-success  text-xxs px-2 py-1 addProduct btn-sm m-0">Add</a>
-                             </td>
-                           </tr>`;
-                productList.append(row)
-            });
-
-            $('.addProduct').on('click', async function() {
-                let pname = document.getElementById('PName');
-                let pprice = document.getElementById('PPrice');
-                let pid = document.getElementById('PId');
-
-
-                pname.value = $(this).data('name');
-                pprice.value = $(this).data('price');
-                pid.value = $(this).data('id');
-
-                $('#create-modal').modal('show');
-            });
-            new DataTable('#productTable', {
-                order: [
-                    [0, 'desc']
-                ],
-                scrollCollapse: false,
-                info: false,
-                lengthChange: false
-            });
-        }
-
         // async function ProductList() {
         //     let res = await axios.get("/products");
         //     let productList = $("#productList");
@@ -319,23 +275,33 @@
         //     productTable.DataTable().destroy();
         //     productList.empty();
 
+        //     console.log(res);
+
+
         //     res.data.forEach(function(item, index) {
-        //         let row = `<tr class="text-xs">
-    //                 <td> <img class="w-10" src="${item['img_url']}"/> ${item['name']} -$ ${item['price']}</td>
-    //                 <td><a data-name="${item['name']}" data-price="${item['price']}" data-id="${item['id']}" class="btn btn-outline-dark text-xxs px-2 py-1 addProduct  btn-sm m-0">Add</a></td>
-    //              </tr>`
+        //         let row =` <tr>
+        //                      <td>
+        //                         <img class="w-10" src="${item['img_url']}" alt="${item['name']}"/> ${item['name']} - $${item['price']}
+        //                      </td>
+        //                      <td>
+        //                         <a data-name="${item['name']}" data-price="${item['price']}" data-id="${item['id']}" class="btn-success  text-xxs px-2 py-1 addProduct btn-sm m-0">Add</a>
+        //                      </td>
+        //                    </tr>`;
         //         productList.append(row)
-        //     })
-
-
-        //     $('.addProduct').on('click', async function() {
-        //         $('#PId').val($(this).data('id')); 
-        //         $('#PName').val($(this).data('name'));
-        //         $('#PPrice').val($(this).data('price'));
-        //         $('#create-modal').modal('show'); 
         //     });
 
+        //     $('.addProduct').on('click', async function() {
+        //         let pname = document.getElementById('PName');
+        //         let pprice = document.getElementById('PPrice');
+        //         let pid = document.getElementById('PId');
 
+
+        //         pname.value = $(this).data('name');
+        //         pprice.value = $(this).data('price');
+        //         pid.value = $(this).data('id');
+
+        //         $('#create-modal').modal('show');
+        //     });
         //     new DataTable('#productTable', {
         //         order: [
         //             [0, 'desc']
@@ -345,6 +311,40 @@
         //         lengthChange: false
         //     });
         // }
+
+        async function ProductList() {
+            let res = await axios.get("/products");
+            let productList = $("#productList");
+            let productTable = $("#productTable");
+            productTable.DataTable().destroy();
+            productList.empty();
+
+            res.data.forEach(function(item, index) {
+                let row = `<tr class="text-xs">
+                    <td> <img class="w-10" src="${item['img_url']}"/> ${item['name']} -$ ${item['price']}</td>
+                    <td><a data-name="${item['name']}" data-price="${item['price']}" data-id="${item['id']}" class="btn-success btn-outline-dark text-xxs px-2 py-1 addProduct  btn-sm m-0">Add</a></td>
+                 </tr>`
+                productList.append(row)
+            })
+
+
+            $('.addProduct').on('click', async function() {
+                $('#PId').val($(this).data('id')); 
+                $('#PName').val($(this).data('name'));
+                $('#PPrice').val($(this).data('price'));
+                $('#create-modal').modal('show'); 
+            });
+
+
+            new DataTable('#productTable', {
+                order: [
+                    [0, 'desc']
+                ],
+                scrollCollapse: false,
+                info: false,
+                lengthChange: false
+            });
+        }
 
 
 
