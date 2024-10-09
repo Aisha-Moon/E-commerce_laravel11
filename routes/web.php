@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\pos\UserController;
@@ -31,6 +32,7 @@ Route::get('customerPage', [CustomerController::class, 'page'])->name('customers
 Route::get('productPage', [ProductController::class, 'page'])->name('products.page')->middleware('tokenVerify');
 Route::get('/invoicePage',[InvoiceController::class,'InvoicePage'])->middleware('tokenVerify');
 Route::get('/salePage',[InvoiceController::class,'SalePage'])->middleware('tokenVerify');
+Route::get('/reportPage',[ReportController::class,'ReportPage'])->middleware('tokenVerify');
 
 
 
@@ -47,3 +49,5 @@ Route::post("/invoice-delete",[InvoiceController::class,'invoiceDelete'])->middl
 
 
 Route::get("/summary",[DashboardController::class,'Summary'])->middleware('tokenVerify');
+Route::get("/sales-report/{FormDate}/{ToDate}",[ReportController::class,'SalesReport'])->middleware('tokenVerify');
+
