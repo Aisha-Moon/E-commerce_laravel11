@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
+   
     function InvoicePage()
     {
         return view('pages.dashboard.invoice-page');
     }
-
     function SalePage()
     {
         return view('pages.dashboard.sale-page');
